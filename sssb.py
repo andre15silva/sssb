@@ -23,10 +23,10 @@ SSSB_URLS = [
 ]
 
 # File path to store previously seen apartments
-PREVIOUSLY_SEEN_FILE = './previous_apartments.txt'
+PREVIOUSLY_SEEN_FILE = './out/previous_apartments.txt'
 
 # Logging settings
-LOG_FILE = './logfile.log'
+LOG_FILE = './out/logfile.log'
 LOG_LEVEL = logging.INFO
 
 # EXCLUDE SETTINGS
