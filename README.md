@@ -28,5 +28,5 @@ services:
       EXCLUDE_AREAS: '["Flemingsberg"]'
       TIME_INTERVAL: 300 # 5 minutes
     volumes:
-      - './runtime:/sssb'
+      - './out:/sssb/out'
     restart: unless-stopped
