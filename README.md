@@ -3,7 +3,7 @@ Script to scrape SSSB's website and send email notifications when new listings a
 
 ## Docker Image
 
-Docker images built for `linux/amd64`, `linux/arm64`, and `linux/arm/v7` are available on Docker Hub at [andre15silva/sssb](https://hub.docker.com/repository/docker/andre15silva/sssb)
+A multi-arch docker image built for `linux/amd64` and `linux/arm64` is available on Docker Hub at [andre15silva/sssb](https://hub.docker.com/repository/docker/andre15silva/sssb).
 
 ## Docker Compose
 
@@ -15,7 +15,7 @@ version: "3"
 services:
   sssb:
     container_name: sssb
-    image: andre15silva/sssb:latest-arm64
+    image: andre15silva/sssb:latest
     environment:
       SMTP_SERVER: 'YOUR_SMTP_SERVER'
       SMTP_PORT: YOUR_SMTP_PORT
