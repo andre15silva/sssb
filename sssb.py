@@ -80,46 +80,48 @@ def scrape_sssb_website(logger):
     options.add_argument('--no-sandbox')
     options.add_argument("--headless")
     options.add_argument('--disable-dev-shm-usage')
-    driver = webdriver.Chrome(options=options)
 
-    for sssb_url in SSSB_URLS:
-        driver.get(sssb_url)
+    with webdriver.Chrome(options=options) as driver:
+        driver = webdriver.Chrome(options=options)
 
-        if driver.find_elements(By.CLASS_NAME, 'NoResult'):
-            logger.info(f'No apartments found in {sssb_url}.')
-            continue
+        for sssb_url in SSSB_URLS:
+            driver.get(sssb_url)
 
-        # Find all apartment/studio listings
-        listings = driver.find_elements(By.CSS_SELECTOR, '.ObjektListItem')
+            if driver.find_elements(By.CLASS_NAME, 'NoResult'):
+                logger.info(f'No apartments found in {sssb_url}.')
+                continue
 
-        for listing in listings:
-            # Extract the listing information
-            type_ = parse_text(listing.find_element(By.CSS_SELECTOR, '.ObjektTyp a').text)
-            url = parse_text(listing.find_element(By.CSS_SELECTOR, '.ObjektTyp a').get_attribute('href'))
-            address = parse_text(listing.find_element(By.CSS_SELECTOR, '.ObjektAdress a').text)
+            # Find all apartment/studio listings
+            listings = driver.find_elements(By.CSS_SELECTOR, '.ObjektListItem')
 
-            details = listing.find_element(By.CSS_SELECTOR, '.ObjektDetaljer')
+            for listing in listings:
+                # Extract the listing information
+                type_ = parse_text(listing.find_element(By.CSS_SELECTOR, '.ObjektTyp a').text)
+                url = parse_text(listing.find_element(By.CSS_SELECTOR, '.ObjektTyp a').get_attribute('href'))
+                address = parse_text(listing.find_element(By.CSS_SELECTOR, '.ObjektAdress a').text)
 
-            obj_number = parse_text(details.find_elements(By.CLASS_NAME, 'ObjektNummer')[1].get_attribute('innerText'))
-            area = parse_text(details.find_elements(By.CLASS_NAME, 'ObjektOmrade')[1].text)
-            floor = parse_text(details.find_elements(By.CLASS_NAME, 'ObjektVaning')[1].text)
-            space = parse_text(details.find_elements(By.CLASS_NAME, 'ObjektYta')[1].text)
-            rent = parse_text(details.find_elements(By.CLASS_NAME, 'ObjektHyra')[1].text)
-            start = parse_text(details.find_elements(By.CLASS_NAME, 'ObjektInflytt')[1].text)
+                details = listing.find_element(By.CSS_SELECTOR, '.ObjektDetaljer')
 
-            key = f'{obj_number}@{start}'
+                obj_number = parse_text(details.find_elements(By.CLASS_NAME, 'ObjektNummer')[1].get_attribute('innerText'))
+                area = parse_text(details.find_elements(By.CLASS_NAME, 'ObjektOmrade')[1].text)
+                floor = parse_text(details.find_elements(By.CLASS_NAME, 'ObjektVaning')[1].text)
+                space = parse_text(details.find_elements(By.CLASS_NAME, 'ObjektYta')[1].text)
+                rent = parse_text(details.find_elements(By.CLASS_NAME, 'ObjektHyra')[1].text)
+                start = parse_text(details.find_elements(By.CLASS_NAME, 'ObjektInflytt')[1].text)
 
-            # Check if the listing is new and should not be excluded
-            if key not in seen_apartments and\
-                    type_ not in EXCLUDE_TYPES and\
-                    area not in EXCLUDE_AREAS:
-                # Add the listing to the list of seen listings
-                seen_apartments.add(key)
+                key = f'{obj_number}@{start}'
 
-                # Print the new listing details
-                logger.info(f'New listing: {url}')
-                body = f'New student apartment/studio available!\n\nTitle: {type_}\nLocation: {area}\nFloor: {floor}\nSpace: {space}\nPrice: {rent}\nStart: {start}\nURL: {url}'
-                send_email(EMAIL_SUBJECT, body)
+                # Check if the listing is new and should not be excluded
+                if key not in seen_apartments and\
+                        type_ not in EXCLUDE_TYPES and\
+                        area not in EXCLUDE_AREAS:
+                    # Add the listing to the list of seen listings
+                    seen_apartments.add(key)
+
+                    # Print the new listing details
+                    logger.info(f'New listing: {url}')
+                    body = f'New student apartment/studio available!\n\nTitle: {type_}\nLocation: {area}\nAddress: {address}\nFloor: {floor}\nSpace: {space}\nPrice: {rent}\nStart: {start}\nURL: {url}'
+                    send_email(EMAIL_SUBJECT, body)
 
     # Save the list of seen apartments
     with open(PREVIOUSLY_SEEN_FILE, 'w') as f:
