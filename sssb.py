@@ -81,7 +81,7 @@ def scrape_sssb_website(logger):
     options.add_argument("--headless")
     options.add_argument('--disable-dev-shm-usage')
 
-    with webdriver.Chrome(options=options) as driver:
+    with webdriver.Chrome(executable_path="/usr/bin/chromedriver", options=options) as driver:
         driver = webdriver.Chrome(options=options)
 
         for sssb_url in SSSB_URLS:
@@ -132,11 +132,4 @@ def scrape_sssb_website(logger):
 
 if __name__ == '__main__':
     logger = setup_logger()
-    while True:
-        try:
-            scrape_sssb_website(logger)
-        except Exception as e:
-            print(e)
-            logger.error(f'Error: {str(e)}')
-
-        time.sleep(TIME_INTERVAL)
+    scrape_sssb_website(logger)
