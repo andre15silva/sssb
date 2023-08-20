@@ -23,10 +23,10 @@ SSSB_URLS = [
 ]
 
 # File path to store previously seen apartments
-PREVIOUSLY_SEEN_FILE = './out/previous_apartments.txt'
+PREVIOUSLY_SEEN_FILE = os.getenv('PREVIOUSLY_SEEN_FILE')
 
 # Logging settings
-LOG_FILE = './out/logfile.log'
+LOG_FILE = os.getenv('LOG_FILE')
 LOG_LEVEL = logging.INFO
 
 # EXCLUDE SETTINGS
