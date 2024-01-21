@@ -13,7 +13,7 @@ SMTP_PORT = int(os.getenv('SMTP_PORT'))
 SMTP_USERNAME = os.getenv('SMTP_USERNAME')
 SMTP_PASSWORD = os.getenv('SMTP_PASSWORD')
 EMAIL_FROM = os.getenv('EMAIL_FROM')
-EMAIL_TO = os.getenv('EMAIL_TO')
+EMAIL_TO = json.loads(os.getenv('EMAIL_TO'))
 EMAIL_SUBJECT = os.getenv('EMAIL_SUBJECT')
 
 # SSSB website URLs
