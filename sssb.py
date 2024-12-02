@@ -5,6 +5,7 @@ import logging
 import smtplib
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 
 # Email settings
@@ -80,8 +81,9 @@ def scrape_sssb_website(logger):
     options.add_argument('--no-sandbox')
     options.add_argument("--headless")
     options.add_argument('--disable-dev-shm-usage')
+    service = ChromeService(executable_path="/usr/bin/chromedriver")
 
-    with webdriver.Chrome(executable_path="/usr/bin/chromedriver", options=options) as driver:
+    with webdriver.Chrome(service=service, options=options) as driver:
         driver = webdriver.Chrome(options=options)
 
         for sssb_url in SSSB_URLS:
