@@ -84,7 +84,6 @@ def scrape_sssb_website(logger):
     service = ChromeService(executable_path="/usr/bin/chromedriver")
 
     with webdriver.Chrome(service=service, options=options) as driver:
-        driver = webdriver.Chrome(options=options)
 
         for sssb_url in SSSB_URLS:
             driver.get(sssb_url)
